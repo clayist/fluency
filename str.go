@@ -1,16 +1,23 @@
 package main
 
-import "strings"
+import (
+	"reflect"
+	"strconv"
+	"strings"
+)
 
-type str struct {
+// Str is the fluent object
+type Str struct {
 	value string
 }
 
-func (s *str) toString() string {
+// String returns the string version of the fluent object
+func (s *Str) String() string {
 	return s.value
 }
 
-func (s *str) after(value string) *str {
+// After returns the slice of string after the first occurance of the provided value
+func (s *Str) After(value string) *Str {
 	index := strings.Index(s.value, value)
 	if index == -1 {
 		return s
@@ -20,7 +27,8 @@ func (s *str) after(value string) *str {
 	return s
 }
 
-func (s *str) afterLast(value string) *str {
+// AfterLast returns the slice of the string after the last occurance of the provided value
+func (s *Str) AfterLast(value string) *Str {
 	index := strings.LastIndex(s.value, value)
 	if index == -1 {
 		return s
@@ -30,7 +38,8 @@ func (s *str) afterLast(value string) *str {
 	return s
 }
 
-func (s *str) before(value string) *str {
+// Before returns the slice of the string before the first occurance of the provided value
+func (s *Str) Before(value string) *Str {
 	index := strings.Index(s.value, value)
 	if index == -1 {
 		return s
@@ -40,11 +49,37 @@ func (s *str) before(value string) *str {
 	return s
 }
 
-func (s *str) append(value string) *str {
-	s.value += value
+// BeforeLast returns the slice of the string before the last occurance of the provided value
+func (s *Str) BeforeLast(value string) *Str {
+	index := strings.LastIndex(s.value, value)
+	if index == -1 {
+		return s
+	}
+
+	s.value = s.value[:index]
 	return s
 }
 
-func of(initial string) *str {
-	return &str{value: initial}
+// Append appends the give value at the end of the current fluent object
+func (s *Str) Append(value interface{}) *Str {
+	var appendable string
+
+	typeof := reflect.TypeOf(value)
+	switch typeof.Name() {
+	case "int64":
+		appendable = strconv.FormatInt(value.(int64), 10)
+		break
+	case "int":
+		appendable = strconv.Itoa(value.(int))
+	case "string":
+		appendable = value.(string)
+	}
+
+	s.value += appendable
+	return s
+}
+
+// On initialized the fluent object on which multiple methods can be chained
+func On(initial string) *Str {
+	return &Str{value: initial}
 }
