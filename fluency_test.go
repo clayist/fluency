@@ -62,3 +62,72 @@ func TestCanBeforeLast(t *testing.T) {
 	s := On("to be or not to be").BeforeLast(" to")
 	assert.Equal(t, "to be or not", s.String())
 }
+
+func TestCanContains(t *testing.T) {
+	yes := On("Water in a glass").Contains("Water")
+	no := On("Water in a glass").Contains("Juice")
+	assert.True(t, yes)
+	assert.False(t, no)
+}
+
+func TestCanContainsAny(t *testing.T) {
+	yes := On("Water in a glass").ContainsAny([]string{"Juice", "Water"})
+	assert.True(t, yes)
+
+	no := On("Water in a glass").ContainsAny([]string{"Soda", "Juice"})
+	assert.False(t, no)
+}
+
+func TestCanContainsAll(t *testing.T) {
+	yes := On("Water in a glass").ContainsAll([]string{"glass", "Water"})
+	assert.True(t, yes)
+
+	no := On("Water in a glass").ContainsAll([]string{"Water", "Juice"})
+	assert.False(t, no)
+}
+
+func TestCanEndsWith(t *testing.T) {
+	yes := On("A complete sentence.").EndsWith(".")
+	assert.True(t, yes)
+
+	no := On("Is this a question?").EndsWith(".")
+	assert.False(t, no)
+}
+
+func TestCanEquals(t *testing.T) {
+	yes := On("Something").Equals("Something")
+	assert.True(t, yes)
+
+	no := On("Nothing").Equals("Something")
+	assert.False(t, no)
+}
+
+func TestCanFinish(t *testing.T) {
+	s := On("some/path/to/somewhere").Finish("/")
+	assert.Equal(t, "some/path/to/somewhere/", s.String())
+
+	s2 := On("some/path/to/somewhere/").Finish("/")
+	assert.Equal(t, "some/path/to/somewhere/", s2.String())
+}
+
+func TestCanSplit(t *testing.T) {
+	splits := On("some/path/to/somewhere").Split("/")
+	assert.Len(t, splits, 4)
+	assert.Contains(t, splits, "some")
+	assert.Contains(t, splits, "path")
+	assert.Contains(t, splits, "to")
+	assert.Contains(t, splits, "somewhere")
+}
+
+func TestCanStartsWith(t *testing.T) {
+	yes := On("A complete sentence.").StartsWith("A comple")
+	assert.True(t, yes)
+
+	no := On("Is this a question?").StartsWith("A comple")
+	assert.False(t, no)
+}
+
+func TestCanTrim(t *testing.T) {
+	s := On("   space around a rocket   ").Trim()
+	assert.Equal(t, "space around a rocket", s.String())
+}
