@@ -134,6 +134,23 @@ func (s *Str) Finish(value string) *Str {
 	return s.Append(value)
 }
 
+// IsEmpty returns whether the fluent object is an empty string
+func (s *Str) IsEmpty() bool {
+	return s.value == ""
+}
+
+// Length returns the length of the fluent object
+func (s *Str) Length() int {
+	return len(s.value)
+}
+
+// Limit trims off the fluent object after the given limit
+func (s *Str) Limit(limit int) *Str {
+	s.value = s.value[:limit]
+
+	return s
+}
+
 // Split breaks the fluent object into a slice of strings
 // at every occurance of the separator
 func (s *Str) Split(separator string) []string {

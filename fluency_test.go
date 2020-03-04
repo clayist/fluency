@@ -110,6 +110,24 @@ func TestCanFinish(t *testing.T) {
 	assert.Equal(t, "some/path/to/somewhere/", s2.String())
 }
 
+func TestCanIsEmpty(t *testing.T) {
+	yes := On("    ").Trim().IsEmpty()
+	assert.True(t, yes)
+
+	no := On("  Fluency     ").Trim().IsEmpty()
+	assert.False(t, no)
+}
+
+func TestCanLength(t *testing.T) {
+	l := On("Fluency").Length()
+	assert.Equal(t, 7, l)
+}
+
+func TestCanLimit(t *testing.T) {
+	s := On("What would you call a soul who cannot see into another?").Limit(20)
+	assert.Equal(t, "What would you call ", s.String())
+}
+
 func TestCanSplit(t *testing.T) {
 	splits := On("some/path/to/somewhere").Split("/")
 	assert.Len(t, splits, 4)
